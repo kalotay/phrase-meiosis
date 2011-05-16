@@ -5,6 +5,26 @@ import hammingdist as hd
 #all possible characters
 ALPHABET = ' '.join([string.lowercase, string.punctuation])
 
+class EvolvingPhrase:
+    def _init_(self, phrase, cell_death_age):
+        assert cell_death_age > 0
+        self._phrase_ = phrase
+        self._cell_death_age_ = int(cell_death_age)
+        self._age_ = 0
+
+    def update_fitness(self, target):
+        if self._age_ < self._cell_death_age_:
+            self._fitness_ = fitness(self._phrase_, target)
+        else:
+            self._fitness_ = 0
+
+    def get_suitability(self, partner, target):
+        return (fitness(partner._phrase_, target) +
+            hd.hammingdist(self._phrase_, partner._phrase_))
+
+    def take_step(self):
+        self._age_ += 1
+
 def fitness(phrase, target):
 #fitness of a phrase
 #defined as the phrase length minus the Hamming distance to target
